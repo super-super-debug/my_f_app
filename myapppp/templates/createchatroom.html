@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Easy Tunnel Chat!</title>
+	</head>
+	<body>
+		
+		<h2>チャットルームの作成</h2>
+		<form method="POST">
+			<!--url forの引数の指定方法はurl_for('送信先の関数名','送信するデータ')-->
+			<label for="chat_room_name">チャットルームの名前</label><br>
+			<input type="text" name="chat_room_name" id="chat_room_name" value=""/>
+			<button type="submit">
+				<span>作成</span>
+				<i class="icon"></i>
+			</button>
+		</form>
+	</body>
+</html>
