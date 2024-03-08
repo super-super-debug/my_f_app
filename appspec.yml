@@ -2,4 +2,4 @@
   os: linux
   files:
     - source: /
-      destination: /home/ec2-user//github.com//
+      destination: /home/ec2-user/myproject
