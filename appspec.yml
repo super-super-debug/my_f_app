@@ -1,7 +1,4 @@
 version: 0.0
 os: linux
 files:
-  - source: / destination: /home/ec2-user/myproject/
-hooks:
-  BeforeInstall:
-      - location: scripts/test.sh
+  - source: / destination: /home
