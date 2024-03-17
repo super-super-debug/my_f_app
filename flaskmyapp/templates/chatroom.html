@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Easy Tunnel Chat!</title>
+    </head>
+    <body>
+        <h2>{{ chat_room_name }}</h2>
+		<div class="chat_space">
+        	<div class="chat_text">
+			{% if contents %}
+        		{% for content in contents|default([]) %}
+        			<p class="chat">{{ content.username }}:{{ content.chat }}</div>
+        		{% endfor %}
+			{% endif %}
+			</div>
+		</div>
+		<form method="POST">
+			{{ form.csrf_token }}
+			{{ form.chat.label }} {{ form.chat(size=20) }}
+			{% if form.chat.errors %}
+			<ul class="errors">
+				<li>{{ error }}</li>
+				<span style="color: black;">{% endfor %}</span>
+			</ul>
+			{% endif %}
+			<input type="submit" value="送信">
+		</form>
+    </body>
+</html>
