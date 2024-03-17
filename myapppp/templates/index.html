@@ -11,10 +11,11 @@
 		<a href="/sign_in">ログイン</a><br>
 		<a href="/sign_up">新規登録</a><br>
 		<form method="POST">
-			{{ form.csrf_token }}
+			{{ form.hidden_tag() }}
 			{{ form.chatroomname.label }} {{ form.chatroomname(size=20) }}
 			{% if form.chatroomname.errors %}
 			<ul class="errors">
+			{% for error in form.chatroomname.errors %}
 				<li>{{ error }}</li>
 				<span style="color: black;">{% endfor %}</span>
 			</ul>
@@ -22,9 +23,11 @@
 			{{ form.password.label}} {{ form.password(size=20) }}
 			{% if form.password.errors %}
 			<ul class="errors">
+			{% for error in form.password.errors %}
 				<li>{{ error }}</li>
 				<span style="color: black;">{% endfor %}</span>
 			</ul>	
+			{% endif %}
 			<input type="submit" value="送信">
 		</form>
 	</body>

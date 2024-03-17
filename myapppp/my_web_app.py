@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, url_for, redirect, Blueprint, flash, session
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFProtect
-from wtforms import StringField
-from wtforms.validators import DataRequired, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Length 
 from argon2 import PasswordHasher
 import pymysql
 from . import app
@@ -12,7 +12,6 @@ def getconnection():
 
 bp = Blueprint('my_web_app', __name__)   
 
-ph = PasswordHasher()
 
 csrf = CSRFProtect
 ph = PasswordHasher(time_cost=3, memory_cost=65536, parallelism=4, hash_len=32, salt_len=16)
@@ -25,24 +24,14 @@ class CreateForm(FlaskForm):
     password = PasswordField("パスワード",validators=[DataRequired("パスワードを入力してください")])
     submit = SubmitField("作成")
 
-#app = Flask(__name__)
-
-#toolbar = DebugToolbarExtension(app)
-#from apps.authinication import views as authinication_views
-#= awAifal59tuau59uaot192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5
-
-@bp.route("/")
-
-def index():
-    return render_template("index.html")
 
 @bp.route("/create_chatroom", methods=["GET", "POST"])
 
 #チャットルームの作成のため、データベースにテーブルを作成しデータを取得、送信
 def create_chatroom():
-    form = CreateForm
+    form = CreateForm()
     new_table_name = ""
-    new_table_primary_key="None"
+    new_table_primary_key = "None"
     
     if form.validate_on_submit():
         connection = getconnection()
@@ -53,14 +42,11 @@ def create_chatroom():
         print(Chat_room_name)
 #チャットルーム名の重複をチェック
         existing_name_query = f"SELECT chat_room_name FROM chatrooms WHERE chat_room_name = '{Chat_room_name}';"
-        try:
-            cursor.execute(existing_name_query)
-        except Exception as e:
-            print(f"ExisitngNameQueryError: {e}")
-        existing_name = cursor.fetchall()
+        cursor.execute(existing_name_query)
+        existing_name = cursor.fetchone()
         if existing_name is not None:
             flash("すでにチャットルーム名が登録されています")
-            return redirect(url_for("my_web_app.create_chatroom" form=form))
+            return redirect(url_for("my_web_app.create_chatroom"))
 #現在のテーブル数を取得  
         show_query = ("SHOW TABLES;")
         try:
@@ -86,7 +72,7 @@ def create_chatroom():
         except Exception as e:
             print(f"OperationalError1: {e}")
 
-#作成したテーブルの情報をchatroomsに挿入
+# 作成したテーブルの情報をchatroomsに挿入"
         convert_query = (f"INSERT INTO chatrooms(chat_room_id,chat_room_identifier,chat_room_name,password) VALUES ({new_table_primary_key},'{new_table_name}','{Chat_room_name}','{Password}');")
         try:
             cursor.execute(convert_query)
@@ -95,24 +81,25 @@ def create_chatroom():
         connection.commit()
         cursor.close()
         connection.close()
-        session['entered_chatroom'] = new_table_name
-
+        session['entered_chatroom'] = new_table_primary_key
+        print(session)
         return redirect(url_for('my_web_app.show_chat', new_table_name = f'{new_table_primary_key}'))
     
     else:
-        return render_template("createchatroom.html")  
+        return render_template("createchatroom.html", form=form)  
+    
 
 @bp.route("/chatroom/<new_table_name>", methods=["POST","GET"])
 
     
-def show_chat(new_table_name):
+def chatroom(new_table_name):
     form = ChatForm()
     connection = getconnection()
     cursor = connection.cursor()
     chat_room_name = None
     contents = None
     post = ""
-    if session["entered_chatrooms"] == new_table_name:
+    if "entered_chatrooms" in session and session["entered_chatrooms"] == new_table_name:
         if new_table_name:
             try:
                 table_name_query = "SELECT chat_room_name FROM chatrooms WHERE chat_room_id = %s;"
@@ -148,8 +135,6 @@ def show_chat(new_table_name):
         else:
             return render_template("chatroom.html", chat_room_name=chat_room_name)
     else:
-        return redirect(url_for("authenicaiton.enter_chatroom"))
+        return redirect(url_for("authenication.enter_chatroom"))
 
-#if __name__ == "__main__":
-    #app.run(host="0.0.0.0", port=80, debug=True)
-    
+

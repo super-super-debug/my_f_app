@@ -28,10 +28,10 @@ class User(db.Model, UserMixin):
 
 class chatrooms(db.Model):
     __tablename__ = "chatrooms"
-    chat_room_name = db.Column(db.Varchar(100))
+    chat_room_name = db.Column(db.String(100))
     chat_room_id = db.Column(db.Integer, primary_key=True)
-    chat_room_identifer = (db.Varchar(10))
-    password = (db.Varchar(51))
+    chat_room_identifer = (db.String(10))
+    password = (db.String(51))
 
 class SignUpForm(FlaskForm):
     username = StringField("ユーザー名",validators=[DataRequired("ユーザー名を入力してください"),Length(1, 250, "250文字以内で入力してください")])
@@ -53,17 +53,16 @@ class EnterRoomForm(FlaskForm):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
-@bp.route("enter_chatrooms", method=[""])
+
 
 @bp.route("/sign_up", methods=["GET", "POST"])
-def signup():
+def sign_up():
     form = SignUpForm()
-    Password = ph.hash(form.password.data)
     if form.validate_on_submit():
         user = User(
             username = form.username.data,
             email = form.email.data,
-            password = Password,
+            password = ph.hash(form.email.data),
         )
     #メールアドレスの重複をチェック
         existing_user = User.query.filter(User.email == form.email.data).first()
@@ -76,6 +75,7 @@ def signup():
             db.session.commit
         except Exception as e:
             print(f"OperationalError1: {e}")
+        Password = ph.hash(form.password.data)
         print(Password)
 #セッションに登録
         login_user(user)
@@ -90,24 +90,29 @@ def signup():
 
 
 @bp.route("/sign_in", methods=["GET", "POST"])
-def login():
+def sign_in():
     form = LoginForm()
     if form.validate_on_submit():
 #メールアドレスを取得
         user = User.query.filter_by(email = form.email.data).first()
-        hash = user.password
-        print(hash)
+        if user is not None:
+            hash = user.password
+            print(hash)
 #ユーザーとパスワードが一致する場合はログインを許可する
-        if user is not None and ph.verify(hash, form.password.data):
-            login_user(user)
-            print("vertify")
-            if ph.check_needs_rehash(hash):
-                db.set_password_hash_for_user(user, ph.hash(form.password.data))
-            return redirect(url_for("my_web_app.create_chatroom"))   
+            if user is not None and ph.verify(hash, form.password.data):
+                login_user(user)
+                print("vertify")
+                if ph.check_needs_rehash(hash):
+                    db.set_password_hash_for_user(user, ph.hash(form.password.data))
+                return redirect(url_for("my_web_app.create_chatroom"))   
+            else:
+                flash("正しいメールアドレスとパスワードを入力してください")
+                return redirect(url_for('authenication.sign_in'))
         else:
-            flash("正しいメールアドレスとパスワードを入力してください")
-            return redirect(url_for('authenication.sign_in'))
+                flash("正しいメールアドレスとパスワードを入力してください")
+                return redirect(url_for('authenication.sign_in'))
     return render_template("auth/sign_in.html", form=form)
+
 @bp.route("/", methods=["GET", "POST"])
 #チャットルームに入るための認証
 def enter_chatroom():
@@ -116,13 +121,17 @@ def enter_chatroom():
         new_table_name = form.chatroomname.data
         room = chatrooms.query.filter_by(chat_room_name = new_table_name).first()
         print(room)
-        hash = room.password
-        print(hash)
-        if new_table_name is not None and ph.verify(hash, form.password.data):
-            print("vertify!")
-            session['entered_chatroom'] = new_table_name
-            return redirect(url_for("my_web_app.show_chat", new_table_name = new_table_name))
+        if room is not None:
+            hash = room.password
+            print(hash)
+            if new_table_name is not None and ph.verify(hash, form.password.data):
+                print("vertify!")
+                session['entered_chatroom'] = new_table_name
+                return redirect(url_for("my_web_app.show_chat", new_table_name = new_table_name))
+            else:
+                flash("正しいメールアドレスとパスワードを入力してください")
+                return redirect(url_for('authenication.enter_chatroom'))
         else:
-            flash("正しいメールアドレスとパスワードを入力してください")
-            return redirect(url_for('authenication.enter_chatroom'))
-    return render_template("index.html")
+                flash("正しいルーム名とパスワードを入力してください")
+                return redirect(url_for('authenication.enter_chatroom'))
+    return render_template("index.html", form =form)
