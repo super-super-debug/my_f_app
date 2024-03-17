@@ -1,6 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: /
+  - source: /myappp/my_web_app.py
     destination: /home/ec2-user/myproject
-    
+  - source: /myapppp/my_web_app.py
+    destination: /home/ec2-user/myproject
