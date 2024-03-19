@@ -2,19 +2,13 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import logging
 import pymysql
-from logging import getLogger
+
 from flask_login import LoginManager
 
 
 app = Flask(__name__, instance_relative_config=True)
 app.config['SECRET_KEY'] = 'dev'
 
-logger = getLogger(__name__)
-def log():
-    logger.debug("debug_message_from__init__.py")
-    logger.info("info_message_from__init__.py")
-    logger.warning("wan_message_from__init__.py!")
-    
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Ichimura$2002@localhost/My_chatrooms?charset=utf8mb4'
 db = SQLAlchemy()
 db.init_app(app)

@@ -18,16 +18,12 @@ my_web_app_logger = getLogger("my_web_app")
 my_web_app_logger.addHandler(file_handler)
 my_web_app_logger.setLevel(DEBUG)
 
-authenication_logger = getLogger(authenication)
+authenication_logger = getLogger("authenication")
 authenication_logger.addHandler(file_handler)
 authenication_logger.setLevel(DEBUG)
 
-__init__logger = getLogger(__init__)
-__init__logger.addHandler(file_handler)
-__init__logger.setLevel(DEBUG)
 my_web_app.log()
 authenication.log()
-__init__.log()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=80, debug=True)
