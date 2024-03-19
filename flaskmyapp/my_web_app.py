@@ -5,7 +5,14 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length 
 from argon2 import PasswordHasher
 import pymysql
+from logging import getLogger
 from . import app
+
+logger = getLogger(__name__)
+def setloglevel():
+    logger.debug("debug_message_from_my_web_app.py")
+    logger.info("info_message_from_my_web_app.py")
+    logger.warning("warn_message_from_my_web_app.py!")
 
 def getconnection():
     return pymysql.connect(host = "localhost", port = int(3306), db = "My_chatrooms", user = "root", password = "Ichimura$2002",charset = "utf8mb4")
@@ -61,7 +68,7 @@ def create_chatroom():
         new_table_name = f'table_{current_table_count + 1}'
         print(new_table_name)
 
-#プライマリーキーを生成
+#プライマリーキーを兼ねるURLを生成
         new_table_primary_key = f'{current_table_count + 1}'
         print(new_table_primary_key)
 
@@ -83,40 +90,39 @@ def create_chatroom():
         connection.close()
         session['entered_chatroom'] = new_table_primary_key
         print(session)
-        return redirect(url_for('my_web_app.show_chat', new_table_name = f'{new_table_primary_key}'))
+        return redirect(url_for('my_web_app.chatroom', new_table_url = new_table_primary_key))
     
     else:
         return render_template("createchatroom.html", form=form)  
     
 
-@bp.route("/chatroom/<new_table_name>", methods=["POST","GET"])
+@bp.route("/chatroom/<new_table_name>", methods=["POST", "GET"])
 
-    
-def chatroom(new_table_name):
+def chatroom(new_table_url):
     form = ChatForm()
     connection = getconnection()
     cursor = connection.cursor()
     chat_room_name = None
     contents = None
     post = ""
-    if "entered_chatrooms" in session and session["entered_chatrooms"] == new_table_name:
-        if new_table_name:
+    if "entered_chatrooms" in session and session["entered_chatrooms"] == new_table_url:
+        if new_table_url:
             try:
                 table_name_query = "SELECT chat_room_name FROM chatrooms WHERE chat_room_id = %s;"
-                cursor.execute(table_name_query, (new_table_name,))
+                cursor.execute(table_name_query, (new_table_url,))
                 chat_room_name = cursor.fetchone()
 
         #if chat_room_name is None:
             # chat_room_idが見つからない場合の処理
         #    return render_template("chatroom_not_found.html")
 
-                toridasu_chats_query = f"SELECT username, chats FROM {new_table_name} LIMIT 35;"
+                toridasu_chats_query = f"SELECT username, chats FROM {new_table_url} LIMIT 35;"
                 cursor.execute(toridasu_chats_query)
                 contents = cursor.fetchall()
 
                 if form.validate_on_submit():
                     post = form.chat.data
-                    add_chat = f"INSERT INTO {new_table_name}(chat) VALUES(%s);"
+                    add_chat = f"INSERT INTO {new_table_url}(chat) VALUES(%s);"
                     cursor.execute(add_chat, (post,))
                     connection.commit()
 
@@ -137,4 +143,6 @@ def chatroom(new_table_name):
     else:
         return redirect(url_for("authenication.enter_chatroom"))
 
-
+#既知のバグ→1.ログイン画面で正しい？ユーザー名パスワードを入力しても一切のバリデーションが表示されないでログイン画面にリダイレクトされる
+# 2.部屋を新規に登録してもデータベースに登録されるが、リダイレクトされない
+# 3./で情報を登録してもリダイレクト、バリデーションされず、その状態で新規登録のページに飛ぶと、チャット名が登録済みのやつと正しいパスを入力しろがバリデーションされる。

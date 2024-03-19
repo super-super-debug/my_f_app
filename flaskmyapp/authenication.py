@@ -7,6 +7,7 @@ from flask_login import LoginManager, login_user, UserMixin
 from wtforms import PasswordField, StringField, SubmitField, EmailField
 from wtforms.validators import DataRequired, Email, Length
 from datetime import datetime
+from logging import getLogger
 from . import app, db, login_manager
     
 bp = Blueprint('authenication', __name__) 
@@ -15,6 +16,12 @@ ph = PasswordHasher()
 
 csrf = CSRFProtect
 ph = PasswordHasher(time_cost=3, memory_cost=65536, parallelism=4, hash_len=32, salt_len=16)
+
+logger = getLogger(__name__)
+def setloglevel():
+    logger.debug("debug_message_from_authenication.py")
+    logger.info("info_message_from_authenication.py")
+    logger.warning("warn_message_from_authenication.py!")
 
 class User(db.Model, UserMixin):
     __tablename__ = "Users"
@@ -46,7 +53,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField("ログイン")
 
 class EnterRoomForm(FlaskForm):
-    chatroomname = StringField("ユーザー名",validators=[DataRequired("チャットルーム名を入力してください"),Length(1, 16, "16文字以内で入力してください")])
+    chatroomname = StringField("ユーザー名",validators=[DataRequired("ルーム名を入力してください"),Length(1, 16, "16文字以内で入力してください")])
     password = PasswordField("パスワード",validators=[DataRequired("パスワードを入力してください"),Length(1, 50, "50文字以内で入力してください")])
     submit = SubmitField("入る")
 
@@ -94,7 +101,7 @@ def sign_in():
     form = LoginForm()
     if form.validate_on_submit():
 #メールアドレスを取得
-        user = User.query.filter_by(email = form.email.data).first()
+        user = User.query.filter_by(User.email == form.email.data).first()
         if user is not None:
             hash = user.password
             print(hash)
@@ -109,8 +116,8 @@ def sign_in():
                 flash("正しいメールアドレスとパスワードを入力してください")
                 return redirect(url_for('authenication.sign_in'))
         else:
-                flash("正しいメールアドレスとパスワードを入力してください")
-                return redirect(url_for('authenication.sign_in'))
+            flash("正しいメールアドレスとパスワードを入力してください")
+            return redirect(url_for('authenication.sign_in'))
     return render_template("auth/sign_in.html", form=form)
 
 @bp.route("/", methods=["GET", "POST"])
@@ -119,7 +126,7 @@ def enter_chatroom():
     form = EnterRoomForm()
     if form.validate_on_submit():
         new_table_name = form.chatroomname.data
-        room = chatrooms.query.filter_by(chat_room_name = new_table_name).first()
+        room = chatrooms.query.filter_by(chatrooms.chat_room_name == new_table_name).first()
         print(room)
         if room is not None:
             hash = room.password
@@ -127,7 +134,7 @@ def enter_chatroom():
             if new_table_name is not None and ph.verify(hash, form.password.data):
                 print("vertify!")
                 session['entered_chatroom'] = new_table_name
-                return redirect(url_for("my_web_app.show_chat", new_table_name = new_table_name))
+                return redirect(url_for("my_web_app.chatroom", new_table_name = new_table_name))
             else:
                 flash("正しいメールアドレスとパスワードを入力してください")
                 return redirect(url_for('authenication.enter_chatroom'))
