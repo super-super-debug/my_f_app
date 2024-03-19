@@ -101,7 +101,7 @@ def sign_in():
     form = LoginForm()
     if form.validate_on_submit():
 #メールアドレスを取得
-        user = User.query.filter_by(User.email == form.email.data).first()
+        user = User.query.filter(User.email == form.email.data).first()
         if user is not None:
             hash = user.password
             print(hash)
@@ -126,7 +126,7 @@ def enter_chatroom():
     form = EnterRoomForm()
     if form.validate_on_submit():
         new_table_name = form.chatroomname.data
-        room = chatrooms.query.filter_by(chatrooms.chat_room_name == new_table_name).first()
+        room = chatrooms.query.filter(chatrooms.chat_room_name == new_table_name).first()
         print(room)
         if room is not None:
             hash = room.password

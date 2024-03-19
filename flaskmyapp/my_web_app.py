@@ -27,7 +27,7 @@ class ChatForm(FlaskForm):
     chat = StringField("chat", validators=[DataRequired("テキストを入力してください")])
 
 class CreateForm(FlaskForm):
-    chatroomname = StringField("チャットルーム名",validators=[DataRequired("チャットルーム名を入力してください"),Length(1, 16, "16文字以内で入力してください")])
+    chatroomname = StringField("チャットルーム名",validators=[DataRequired("ルーム名を入力してください"),Length(1, 16, "16文字以内で入力してください")])
     password = PasswordField("パスワード",validators=[DataRequired("パスワードを入力してください")])
     submit = SubmitField("作成")
 
@@ -69,8 +69,8 @@ def create_chatroom():
         print(new_table_name)
 
 #プライマリーキーを兼ねるURLを生成
-        new_table_primary_key = f'{current_table_count + 1}'
-        print(new_table_primary_key)
+        new_table_url = f'{current_table_count + 1}'
+        print(new_table_url)
 
 #新しいテーブルを作成
         create_table_sql = f"CREATE TABLE IF NOT EXISTS {new_table_name} (user_id INTEGER, user_name VARCHAR(255), chat TEXT, chat_id INTEGER AUTO_INCREMENT PRIMARY KEY, written_on DATE);"
@@ -80,7 +80,7 @@ def create_chatroom():
             print(f"OperationalError1: {e}")
 
 # 作成したテーブルの情報をchatroomsに挿入"
-        convert_query = (f"INSERT INTO chatrooms(chat_room_id,chat_room_identifier,chat_room_name,password) VALUES ({new_table_primary_key},'{new_table_name}','{Chat_room_name}','{Password}');")
+        convert_query = (f"INSERT INTO chatrooms(chat_room_id,chat_room_identifier,chat_room_name,password) VALUES ({new_table_url},'{new_table_name}','{Chat_room_name}','{Password}');")
         try:
             cursor.execute(convert_query)
         except Exception as e:
@@ -88,15 +88,15 @@ def create_chatroom():
         connection.commit()
         cursor.close()
         connection.close()
-        session['entered_chatroom'] = new_table_primary_key
+        session['entered_chatroom'] = new_table_url
         print(session)
-        return redirect(url_for('my_web_app.chatroom', new_table_url = new_table_primary_key))
+        return redirect(url_for('my_web_app.chatroom', new_table_url = new_table_url))
     
     else:
         return render_template("createchatroom.html", form=form)  
     
 
-@bp.route("/chatroom/<new_table_name>", methods=["POST", "GET"])
+@bp.route("/chatroom/<new_table_url>", methods=["POST", "GET"])
 
 def chatroom(new_table_url):
     form = ChatForm()
