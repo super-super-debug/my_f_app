@@ -11,6 +11,9 @@
 		<a href="/sign_in">ログイン</a><br>
 		<a href="/sign_up">新規登録</a><br>
 		<form method="POST">
+			{% for message in get_flashed_messages() %}
+            <p style="color: red;">{{ message }}</p>
+            {% endfor %}
 			{{ form.hidden_tag() }}
 			{{ form.chatroomname.label }} {{ form.chatroomname(size=20) }}
 			{% if form.chatroomname.errors %}

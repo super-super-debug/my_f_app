@@ -79,7 +79,7 @@ def create_chatroom():
         except Exception as e:
             print(f"OperationalError1: {e}")
 
-# 作成したテーブルの情報をchatroomsに挿入"
+# 作成したテーブルの情報をchatroomsテーブルに挿入"
         convert_query = (f"INSERT INTO chatrooms(chat_room_id,chat_room_identifier,chat_room_name,password) VALUES ({new_table_url},'{new_table_name}','{Chat_room_name}','{Password}');")
         try:
             cursor.execute(convert_query)
@@ -90,7 +90,7 @@ def create_chatroom():
         connection.close()
         session['entered_chatroom'] = new_table_url
         print(session)
-        return redirect(url_for('my_web_app.chatroom', new_table_url = new_table_url))
+        return redirect(url_for('my_web_app.chatroom', new_table_url = f"{new_table_url}"))
     
     else:
         return render_template("createchatroom.html", form=form)  
@@ -105,7 +105,8 @@ def chatroom(new_table_url):
     chat_room_name = None
     contents = None
     post = ""
-    if "entered_chatrooms" in session and session["entered_chatrooms"] == new_table_url:
+    print(new_table_url)
+    if "entered_chatrooms" in session and session["entered_chatrooms"] == f'{new_table_url}':
         if new_table_url:
             try:
                 table_name_query = "SELECT chat_room_name FROM chatrooms WHERE chat_room_id = %s;"
@@ -146,4 +147,12 @@ def chatroom(new_table_url):
 
 #既知のバグ→1.ログイン画面で正しい？ユーザー名パスワードを入力しても一切のバリデーションが表示されないでログイン画面にリダイレクトされる
 # 2.部屋を新規に登録してもデータベースに登録されるが、リダイレクトされない
+#$argon2id$v=19$m=65536,t=3,p=4$EiD5kM+UEK99AislH9GiwA$XufJsD1Zhp8MnrOP3oX16jIt0Lw93p0MBFsbNgRbjaI
+#aaa
+#34
+#table_35
+#35
+
+# (<SecureCookieSession {'_fresh': False, 'csrf_token': '731c7d2c1c427011df34820ef81e8a73f6f27e0e', 'entered_chatroom': '35'}>
+#)
 # 3./で情報を登録してもリダイレクト、バリデーションされず、その状態で新規登録のページに飛ぶと、チャット名が登録済みのやつと正しいパスを入力しろがバリデーションされる。
