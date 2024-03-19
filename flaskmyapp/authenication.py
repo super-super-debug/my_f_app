@@ -18,7 +18,7 @@ csrf = CSRFProtect
 ph = PasswordHasher(time_cost=3, memory_cost=65536, parallelism=4, hash_len=32, salt_len=16)
 
 logger = getLogger(__name__)
-def setloglevel():
+def log():
     logger.debug("debug_message_from_authenication.py")
     logger.info("info_message_from_authenication.py")
     logger.warning("warn_message_from_authenication.py!")

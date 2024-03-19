@@ -9,7 +9,7 @@ from logging import getLogger
 from . import app
 
 logger = getLogger(__name__)
-def setloglevel():
+def log():
     logger.debug("debug_message_from_my_web_app.py")
     logger.info("info_message_from_my_web_app.py")
     logger.warning("warn_message_from_my_web_app.py!")
@@ -38,7 +38,7 @@ class CreateForm(FlaskForm):
 def create_chatroom():
     form = CreateForm()
     new_table_name = ""
-    new_table_primary_key = "None"
+    new_table_url = "None"
     
     if form.validate_on_submit():
         connection = getconnection()
@@ -140,6 +140,7 @@ def chatroom(new_table_url):
                 return render_template("chatroom.html", chat_room_name=chat_room_name, contents=contents, post=post)
         else:
             return render_template("chatroom.html", chat_room_name=chat_room_name)
+        print("cookie_error")
     else:
         return redirect(url_for("authenication.enter_chatroom"))
 

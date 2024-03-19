@@ -10,7 +10,7 @@ app = Flask(__name__, instance_relative_config=True)
 app.config['SECRET_KEY'] = 'dev'
 
 logger = getLogger(__name__)
-def setloglevel():
+def log():
     logger.debug("debug_message_from__init__.py")
     logger.info("info_message_from__init__.py")
     logger.warning("wan_message_from__init__.py!")
