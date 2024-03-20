@@ -107,9 +107,11 @@ def sign_in():
         if user is not None:
             hash = user.password
             print(hash)
+            password = form.password.data
+            print(password)
 #ユーザーとパスワードが一致する場合はログインを許可する 
             try:
-                ph.verify(hash, form.password.data):
+                ph.verify(hash, password):
                 login_user(user)
                 print("vertify")
                 #if ph.check_needs_rehash(hash):
