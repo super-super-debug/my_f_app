@@ -111,7 +111,7 @@ def sign_in():
             print(password)
 #ユーザーとパスワードが一致する場合はログインを許可する 
             try:
-                ph.verify(hash, password):
+                ph.verify(hash, password)
                 login_user(user)
                 print("vertify")
                 #if ph.check_needs_rehash(hash):
@@ -138,7 +138,7 @@ def enter_chatroom():
         if room is not None and hash is not None:
             print(hash)
             try:
-                ph.verify(hash, form.password.data):
+                ph.verify(hash, form.password.data)
                 print("vertify!")
                 session['entered_chatroom'] = new_table_name
                 return redirect(url_for("my_web_app.chatroom", new_table_name = new_table_name))
