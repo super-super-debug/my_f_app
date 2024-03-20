@@ -8,7 +8,7 @@
     <body>
         <h2>ログイン</h2>
         <form method="POST" novalidate="novalidate">
-        {% for mesage in get_flashed_messages() %}
+        {% for message in get_flashed_messages() %}
         <p style="color: red;">{{ message }}</p>
         {% endfor %} {{ form.csrf_token }}
         <p>{{ form.email.label}} {{ form.email(placeholder="メールアドレス")}}</p>

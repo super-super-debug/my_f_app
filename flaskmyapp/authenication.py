@@ -23,7 +23,7 @@ def log():
     logger.info("info_message_from_authenication.py")
     logger.warning("warn_message_from_authenication.py!")
 
-class User(db.Model, UserMixin):
+class Users(db.Model, UserMixin):
     __tablename__ = "Users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, index=True)
@@ -66,20 +66,20 @@ def load_user(user_id):
 def sign_up():
     form = SignUpForm()
     if form.validate_on_submit():
-        user = User(
+        user = Users(
             username = form.username.data,
             email = form.email.data,
             password = ph.hash(form.email.data),
         )
     #メールアドレスの重複をチェック
-        existing_user = User.query.filter(User.email == form.email.data).first()
+        existing_user = Users.query.filter(Users.email == form.email.data).first()
         if existing_user is not None:
             flash("すでに登録済みのメールアドレスです")
             return redirect(url_for("authenication.sign_up"))
     #ユーザー情報を登録する
         db.session.add(user)
         try:
-            db.session.commit
+            db.session.commit()
         except Exception as e:
             print(f"OperationalError1: {e}")
         Password = ph.hash(form.password.data)
@@ -101,18 +101,22 @@ def sign_in():
     form = LoginForm()
     if form.validate_on_submit():
 #メールアドレスを取得
-        user = User.query.filter(User.email == form.email.data).first()
+        email = form.email.data
+        print(email)
+        user = Users.query.filter(Users.email == form.email.data).first()
         if user is not None:
             hash = user.password
             print(hash)
-#ユーザーとパスワードが一致する場合はログインを許可する
-            if user is not None and ph.verify(hash, form.password.data):
+#ユーザーとパスワードが一致する場合はログインを許可する 
+            try:
+                ph.verify(hash, form.password.data):
                 login_user(user)
                 print("vertify")
-                if ph.check_needs_rehash(hash):
-                    db.set_password_hash_for_user(user, ph.hash(form.password.data))
+                #if ph.check_needs_rehash(hash):
+                    #db.set_password_hash_for_user(user, ph.hash(form.password.data))
                 return redirect(url_for("my_web_app.create_chatroom"))   
-            else:
+            except Exception as e:
+                print(e)
                 flash("正しいメールアドレスとパスワードを入力してください")
                 return redirect(url_for('authenication.sign_in'))
         else:
@@ -128,17 +132,19 @@ def enter_chatroom():
         new_table_name = form.chatroomname.data
         room = chatrooms.query.filter(chatrooms.chat_room_name == new_table_name).first()
         print(room)
-        if room is not None:
-            hash = room.password
+        hash = room.password
+        if room is not None and hash is not None:
             print(hash)
-            if new_table_name is not None and ph.verify(hash, form.password.data):
+            try:
+                ph.verify(hash, form.password.data):
                 print("vertify!")
                 session['entered_chatroom'] = new_table_name
                 return redirect(url_for("my_web_app.chatroom", new_table_name = new_table_name))
-            else:
-                flash("正しいメールアドレスとパスワードを入力してください")
-                return redirect(url_for('authenication.enter_chatroom'))
-        else:
+            except Exception as e:
+                print(e)
                 flash("正しいルーム名とパスワードを入力してください")
                 return redirect(url_for('authenication.enter_chatroom'))
+        else:
+            flash("正しいルーム名とパスワードを入力してください")
+            return redirect(url_for('authenication.enter_chatroom'))
     return render_template("index.html", form =form)

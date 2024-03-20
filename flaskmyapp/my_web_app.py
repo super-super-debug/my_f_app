@@ -90,8 +90,7 @@ def create_chatroom():
         connection.close()
         session['entered_chatroom'] = new_table_url
         print(session)
-        return redirect(url_for('my_web_app.chatroom', new_table_url = f"{new_table_url}"))
-    
+        return redirect(url_for('chatroom', new_table_url = f"{new_table_url}"))
     else:
         return render_template("createchatroom.html", form=form)  
     
@@ -145,7 +144,7 @@ def chatroom(new_table_url):
     else:
         return redirect(url_for("authenication.enter_chatroom"))
 
-#既知のバグ→1.ログイン画面で正しい？ユーザー名パスワードを入力しても一切のバリデーションが表示されないでログイン画面にリダイレクトされる
+#既知のバグ→1.ログイン画面で正しい？メールアドレすパスワードを入力しても認証されず間違ったことになってる。
 # 2.部屋を新規に登録してもデータベースに登録されるが、リダイレクトされない
 #$argon2id$v=19$m=65536,t=3,p=4$EiD5kM+UEK99AislH9GiwA$XufJsD1Zhp8MnrOP3oX16jIt0Lw93p0MBFsbNgRbjaI
 #aaa
