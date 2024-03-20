@@ -59,7 +59,7 @@ class EnterRoomForm(FlaskForm):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(user_id)
+    return Users.query.get(user_id)
 
 
 @bp.route("/sign_up", methods=["GET", "POST"])
@@ -69,7 +69,7 @@ def sign_up():
         user = Users(
             username = form.username.data,
             email = form.email.data,
-            password = ph.hash(form.email.data),
+            password = ph.hash(form.password.data),
         )
     #メールアドレスの重複をチェック
         existing_user = Users.query.filter(Users.email == form.email.data).first()
@@ -82,7 +82,7 @@ def sign_up():
             db.session.commit()
         except Exception as e:
             print(f"OperationalError1: {e}")
-        Password = ph.hash(form.password.data)
+        Password = ph.hash("hackyouman")
         print(Password)
 #セッションに登録
         login_user(user)
