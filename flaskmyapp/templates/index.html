@@ -17,19 +17,16 @@
 			{{ form.hidden_tag() }}
 			{{ form.chatroomname.label }} {{ form.chatroomname(size=20) }}
 			{% if form.chatroomname.errors %}
-			<ul class="errors">
 			{% for error in form.chatroomname.errors %}
-				<li>{{ error }}</li>
-				<span style="color: black;">{% endfor %}</span>
+			<span style="color: black;">{{ error }}</span>
+			{% endfor %}
 			</ul>
 			{% endif %}
 			{{ form.password.label}} {{ form.password(size=20) }}
 			{% if form.password.errors %}
-			<ul class="errors">
 			{% for error in form.password.errors %}
-				<li>{{ error }}</li>
-				<span style="color: black;">{% endfor %}</span>
-			</ul>	
+			<span style="color: black;">{{ error }}</span>
+			{% endfor %}	
 			{% endif %}
 			<input type="submit" value="送信">
 		</form>

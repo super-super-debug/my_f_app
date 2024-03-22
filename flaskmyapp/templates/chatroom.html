@@ -20,10 +20,8 @@
 			{{ form.csrf_token }}
 			{{ form.chat.label }} {{ form.chat(size=20) }}
 			{% if form.chat.errors %}
-			<ul class="errors">
-				<li>{{ error }}</li>
-				<span style="color: black;">{% endfor %}</span>
-			</ul>
+			<span style="color: black;">{{ error }}</span>
+			{% endfor %}
 			{% endif %}
 			<input type="submit" value="送信">
 		</form>
