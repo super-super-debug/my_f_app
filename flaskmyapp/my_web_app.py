@@ -90,10 +90,9 @@ def create_chatroom():
         connection.close()
         session['entered_chatroom'] = new_table_url
         print(session)
-        return redirect(url_for('my_web_app.chatroom', new_table_url = f"{new_table_url}"))
+        return redirect(url_for('my_web_app.chatroom', new_table_url=new_table_url))
     else:
-        return render_template("createchatroom.html", form=form)  
-    
+        return render_template("createchatroom.html", form=form) 
 
 @bp.route("/chatroom/<new_table_url>", methods=["POST", "GET"])
 
@@ -105,7 +104,8 @@ def chatroom(new_table_url):
     contents = None
     post = ""
     print(new_table_url)
-    if "entered_chatrooms" in session and session["entered_chatrooms"] == f'{new_table_url}':
+    print(session["entered_chatrooms"])
+    if session["entered_chatrooms"] is not None and session["entered_chatrooms"] == new_table_url:
         if new_table_url:
             try:
                 table_name_query = "SELECT chat_room_name FROM chatrooms WHERE chat_room_id = %s;"
@@ -144,7 +144,6 @@ def chatroom(new_table_url):
     else:
         return redirect(url_for("authenication.enter_chatroom"))
 
-#既知のバグ→1.ログイン画面で正しい？メールアドレすパスワードを入力しても認証されず間違ったことになってる。
 # 2.部屋を新規に登録してもデータベースに登録されるが、リダイレクトされない
 #$argon2id$v=19$m=65536,t=3,p=4$EiD5kM+UEK99AislH9GiwA$XufJsD1Zhp8MnrOP3oX16jIt0Lw93p0MBFsbNgRbjaI
 #aaa
