@@ -20,6 +20,7 @@
 			{{ form.csrf_token }}
 			{{ form.chat.label }} {{ form.chat(size=20) }}
 			{% if form.chat.errors %}
+			{% for error in form.chat.errors%}
 			<span style="color: black;">{{ error }}</span>
 			{% endfor %}
 			{% endif %}
