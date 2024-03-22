@@ -90,6 +90,7 @@ def create_chatroom():
         connection.close()
         session['entered_chatroom'] = new_table_url
         print(session)
+        print(session.get("entered_chatroom"))
         return redirect(url_for('my_web_app.chatroom', new_table_url=new_table_url))
     else:
         return render_template("createchatroom.html", form=form) 
@@ -104,8 +105,8 @@ def chatroom(new_table_url):
     contents = None
     post = ""
     print(new_table_url)
-    print(session["entered_chatrooms"])
-    if session["entered_chatrooms"] is not None and session["entered_chatrooms"] == new_table_url:
+    print(session.get("entered_chatroom"))
+    if session.get("entered_chatroom") is not None and session.get("entered_chatroom") == new_table_url:
         if new_table_url:
             try:
                 table_name_query = "SELECT chat_room_name FROM chatrooms WHERE chat_room_id = %s;"
