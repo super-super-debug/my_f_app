@@ -138,7 +138,7 @@ def chatroom(new_table_url):
                 cursor.close()
                 connection.close()
 
-                return render_template("chatroom.html", chat_room_name=chat_room_name, contents=contents, post=post)
+                return render_template("chatroom.html", chat_room_name=chat_room_name, contents=contents, post=post, form=form)
         else:
             return render_template("chatroom.html", chat_room_name=chat_room_name)
         print("cookie_error")
