@@ -91,7 +91,7 @@ def create_chatroom():
         session['entered_chatroom'] = new_table_url
         print(session)
         print(session.get("entered_chatroom"))
-        return redirect(url_for('my_web_app.chatroom', new_table_url=new_table_url))
+        return redirect(url_for('my_web_app.chatroom', new_table_url=new_table_url, form=form))
     else:
         return render_template("createchatroom.html", form=form) 
 

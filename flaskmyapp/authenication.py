@@ -143,7 +143,7 @@ def enter_chatroom():
                 ph.verify(hash, form.password.data)
                 print("vertify!")
                 session['entered_chatroom'] = new_table_url
-                return redirect(url_for("my_web_app.chatroom", new_table_url = new_table_url))
+                return redirect(url_for("my_web_app.chatroom", new_table_url = new_table_url, form=form))
             except Exception as e:
                 print(e)
                 flash("正しいルーム名とパスワードを入力してください")
