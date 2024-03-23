@@ -123,10 +123,11 @@ def chatroom(new_table_url):
                 print(contents)
                 if form.validate_on_submit():
                     kariname = session.get("user_name")
-                    if name is not None:
+                    if kariname is not None:
                         name = kariname
                     else:
                         name = "Anonimus"
+                print(name)
                 post = form.chat.data
                 add_chat = f"INSERT INTO table_{new_table_url}(chat,user_name) VALUES ('{post}','{name}');"
                 cursor.execute(add_chat)
