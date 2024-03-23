@@ -120,12 +120,17 @@ def chatroom(new_table_url):
                 toridasu_chats_query = f"SELECT user_name, chat FROM table_{new_table_url} LIMIT 35;"
                 cursor.execute(toridasu_chats_query)
                 contents = cursor.fetchall()
-
+                print(contents)
                 if form.validate_on_submit():
-                    post = form.chat.data
-                    add_chat = f"INSERT INTO table_{new_table_url}(chat) VALUES ({post});"
-                    cursor.execute(add_chat)
-                    connection.commit()
+                    kariname = session.get("user_name")
+                    if name is not None:
+                        name = kariname
+                    else:
+                        name = "Anonimus"
+                post = form.chat.data
+                add_chat = f"INSERT INTO table_{new_table_url}(chat,user_name) VALUES ('{post}','{name}');"
+                cursor.execute(add_chat)
+                connection.commit()
 
             except pymysql.Error as e:
                 print(f"オペレーショナルエラーです!!: {e}")
@@ -140,7 +145,7 @@ def chatroom(new_table_url):
 
                 return render_template("chatroom.html", chat_room_name=chat_room_name, contents=contents, post=post, form=form)
         else:
-            return render_template("chatroom.html", chat_room_name=chat_room_name)
+            return render_template("chatroom.html", chat_room_name=chat_room_name, form=form)
         print("cookie_error")
     else:
         return redirect(url_for("authenication.enter_chatroom"))
