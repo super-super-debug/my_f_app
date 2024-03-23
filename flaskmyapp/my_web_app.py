@@ -121,6 +121,8 @@ def chatroom(new_table_url):
                 cursor.execute(toridasu_chats_query)
                 contents = cursor.fetchall()
                 print(contents)
+                for content in contents:
+                    print(content)
                 if form.validate_on_submit():
                     kariname = session.get("user_name")
                     if kariname is not None:
