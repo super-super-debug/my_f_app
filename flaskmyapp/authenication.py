@@ -134,11 +134,12 @@ def enter_chatroom():
         new_table_name = form.chatroomname.data
         room = chatrooms.query.filter(chatrooms.chat_room_name == new_table_name).first()
         print(room)
-        hash = room.password
-        new_table_url = room.chat_room_id
-        print(new_table_url)
-        if room is not None and hash is not None:
-            print(hash)
+        if room is not None:
+            hash = room.password
+            new_table_url = room.chat_room_id
+            print(new_table_url)
+         #and hash is not None:
+          #  print(hash)
             try:
                 ph.verify(hash, form.password.data)
                 print("vertify!")
