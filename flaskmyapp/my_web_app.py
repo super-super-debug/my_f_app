@@ -117,7 +117,7 @@ def chatroom(new_table_url):
             # chat_room_idが見つからない場合の処理
         #    return render_template("chatroom_not_found.html")
 
-                toridasu_chats_query = f"SELECT username, chats FROM {new_table_url} LIMIT 35;"
+                toridasu_chats_query = f"SELECT username, chats FROM table_{new_table_url} LIMIT 35;"
                 cursor.execute(toridasu_chats_query)
                 contents = cursor.fetchall()
 
@@ -145,7 +145,6 @@ def chatroom(new_table_url):
     else:
         return redirect(url_for("authenication.enter_chatroom"))
 
-# 2.部屋を新規に登録してもデータベースに登録されるが、リダイレクトされない
 #$argon2id$v=19$m=65536,t=3,p=4$EiD5kM+UEK99AislH9GiwA$XufJsD1Zhp8MnrOP3oX16jIt0Lw93p0MBFsbNgRbjaI
 #aaa
 #34
@@ -155,3 +154,5 @@ def chatroom(new_table_url):
 # (<SecureCookieSession {'_fresh': False, 'csrf_token': '731c7d2c1c427011df34820ef81e8a73f6f27e0e', 'entered_chatroom': '35'}>
 #)
 # 3./で情報を登録してもリダイレクト、バリデーションされず、その状態で新規登録のページに飛ぶと、チャット名が登録済みのやつと正しいパスを入力しろがバリデーションされる。
+#オペレーショナルエラーです!!: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '43 LIMIT 35' at line 1")
+#126.63.190.120 - - [22/Mar/2024 16:44:31] "GET /chatroom/43?form=<flaskmyapp.my_web_app.CreateForm+object+at+0x7fcbfbebeca0> HTTP/1.1" 200 -
