@@ -11,7 +11,7 @@
         	<div class="chat_text">
 			{% if contents %}
         		{% for content in contents|default([]) %}
-        			<p class="chat">{{ content.username }}:{{ content.chat }}</div>
+        			<p class="chat">{{ content[0] }}:{{ content[1] }}</div>
         		{% endfor %}
 			{% endif %}
 			</div>
