@@ -117,7 +117,7 @@ def chatroom(new_table_url):
             # chat_room_idが見つからない場合の処理
         #    return render_template("chatroom_not_found.html")
 
-                toridasu_chats_query = f"SELECT username, chats FROM table_{new_table_url} LIMIT 35;"
+                toridasu_chats_query = f"SELECT user_name, chats FROM table_{new_table_url} LIMIT 35;"
                 cursor.execute(toridasu_chats_query)
                 contents = cursor.fetchall()
 
