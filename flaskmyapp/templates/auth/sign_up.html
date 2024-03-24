@@ -8,9 +8,11 @@
     <body>
         <h2>新規登録</h2>
         <form method="POST" novalidate="novalidate">
-            {% for message in get_flashed_messages() %}
-            <p style="color: red;">{{ message }}</p>
-            {% endfor %}
+            {% if messages %}
+                {% for message in messages %}
+                <p style="color: red;">{{ message }}</p>
+                {% endfor %}
+            {% endif%}
             {{ form.csrf_token }}
             <p>{{ form.username.label }}
                 {{ form.username(size=30, placeholder="ユーザー名")}}
