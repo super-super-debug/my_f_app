@@ -10,7 +10,7 @@
         <form method="POST" novalidate="novalidate">
             {% if messages %}
                 {% for message in messages %}
-                <p style="color: red;">{{ message }}</p>
+                <span style="color: red;">{{ message }}</span>
                 {% endfor %}
             {% endif%}
             {{ form.csrf_token }}

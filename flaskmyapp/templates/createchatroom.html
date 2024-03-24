@@ -8,7 +8,7 @@
 	<body>
 		
 		<h2>チャットルームの作成</h2>
-		<form method="POST">
+		<form method="POST" novalidate="novalidate">
                         {{ form.hidden_tag() }}
                         {{ form.chatroomname.label }} {{ form.chatroomname(size=20) }}
                         {% if form.chatroomname.errors %}

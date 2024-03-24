@@ -10,10 +10,10 @@
 		<a href=/create_chatroom>リンク</a><br>
 		<a href="/sign_in">ログイン</a><br>
 		<a href="/sign_up">新規登録</a><br>
-		<form method="POST">
+		<form method="POST" novalidate="novalidate">
 			{% if message %}
 				{% for message in messages %}
-            	<p style="color: red;">{{ message }}</p>
+            	<span style="color: red;">{{ message }}</span>
             	{% endfor %}
 			{{ form.hidden_tag() }}
 			{% endif%}
