@@ -9,7 +9,7 @@
         <h2>ログイン</h2>
         <form method="POST" novalidate="novalidate">
         {% if messages %}
-        {% for message in messages() %}
+        {% for message in messages %}
         <p style="color: red;">{{ message }}</p>
         {% endfor %}
         {% endif %} {{ form.csrf_token }}

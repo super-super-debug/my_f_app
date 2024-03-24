@@ -53,7 +53,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField("ログイン")
 
 class EnterRoomForm(FlaskForm):
-    chatroomname = StringField("ユーザー名",validators=[DataRequired("ルーム名を入力してください"),Length(1, 16, "16文字以内で入力してください")])
+    chatroomname = StringField("ルーム名",validators=[DataRequired("ルーム名を入力してください"),Length(1, 16, "16文字以内で入力してください")])
     password = PasswordField("パスワード",validators=[DataRequired("パスワードを入力してください"),Length(1, 50, "50文字以内で入力してください")])
     submit = SubmitField("入る")
 

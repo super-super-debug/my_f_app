@@ -12,7 +12,7 @@
 		<a href="/sign_up">新規登録</a><br>
 		<form method="POST">
 			{% if message %}
-				{% for message messages() %}
+				{% for message in messages %}
             	<p style="color: red;">{{ message }}</p>
             	{% endfor %}
 			{{ form.hidden_tag() }}
