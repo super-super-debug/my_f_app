@@ -31,5 +31,6 @@ url
 ### インフラ
  - EC2, Codedeploy, Route53, ACM, IAM
 ## ネットワーク構成図
+![network](script/network.png)
 
 
