@@ -9,9 +9,9 @@ from wtforms.validators import DataRequired, Email, Length
 from datetime import datetime
 from logging import getLogger
 from . import app, db, login_manager
-    
-bp = Blueprint('authenication', __name__) 
-     
+
+bp = Blueprint('authenication', __name__)
+
 ph = PasswordHasher()
 
 csrf = CSRFProtect
@@ -37,15 +37,15 @@ class chatrooms(db.Model):
     __tablename__ = "chatrooms"
     chat_room_name = db.Column(db.String(100))
     chat_room_id = db.Column(db.Integer, primary_key=True)
-    chat_room_identifer = (db.String(10))
-    password = (db.String(51))
+    chat_room_identifier = db.Column(db.String(10))
+    password = db.Column(db.String(51))
 
 class SignUpForm(FlaskForm):
     username = StringField("ユーザー名",validators=[DataRequired("ユーザー名を入力してください"),Length(1, 250, "250文字以内で入力してください")])
     email = EmailField("メールアドレス",validators=[DataRequired("メールアドレスを入力してください"),Email("メールアドレスの形式で入力してください")])
     password = PasswordField("パスワード",validators=[DataRequired("パスワードを入力してください"),Length(10, 50, "10文字以上50文字以内で入力してください")])
     submit = SubmitField("新規登録")
-    
+
 
 class LoginForm(FlaskForm):
     email = EmailField("メールアドレス",validators=[DataRequired("メールアドレスを入力してください"),Email("メールアドレスの形式で入力してください")])
@@ -87,12 +87,7 @@ def sign_up():
 #セッションに登録
         login_user(user)
         return redirect(url_for('my_web_app.create_chatroom'))
-    """
-        next_ = request.args.get("next")
-        if next_ is None or not next_.startswith("/"):
-            next_ = url_for("")
-        return redirect(next_)
-    """
+
     return render_template("auth/sign_up.html", form=form)
 
 
@@ -109,14 +104,12 @@ def sign_in():
             print(hash)
             password = form.password.data
             print(password)
-#ユーザーとパスワードが一致する場合はログインを許可する 
+#ユーザーとパスワードが一致する場合はログインを許可する
             try:
                 ph.verify(hash, password)
                 login_user(user)
                 print("vertify")
-                #if ph.check_needs_rehash(hash):
-                    #db.set_password_hash_for_user(user, ph.hash(form.password.data))
-                return redirect(url_for("my_web_app.create_chatroom"))   
+                return redirect(url_for("my_web_app.create_chatroom"))
             except Exception as e:
                 print(e)
                 flash("正しいメールアドレスとパスワードを入力してください")
@@ -131,20 +124,18 @@ def sign_in():
 def enter_chatroom():
     form = EnterRoomForm()
     if form.validate_on_submit():
-        new_table_name = form.chatroomname.data
-        room = chatrooms.query.filter(chatrooms.chat_room_name == new_table_name).first()
+        room = chatrooms.query.filter(chatrooms.chat_room_name == form.chatroomname.data).first()
         print(room)
         if room is not None:
             hash = room.password
             new_table_url = room.chat_room_id
-            print(new_table_url)
-         #and hash is not None:
-          #  print(hash)
             try:
                 ph.verify(hash, form.password.data)
                 print("vertify!")
-                session['entered_chatroom'] = new_table_url
-                return redirect(url_for("my_web_app.chatroom", new_table_url = new_table_url, form=form))
+                session['entered_chatroom'] = str(new_table_url)
+                print(session.get("entered_chatroom"))
+                return redirect(url_for("my_web_app.chatroom", new_table_url = new_table_url))
+            #認証できなかった時の処理
             except Exception as e:
                 print(e)
                 flash("正しいルーム名とパスワードを入力してください")
@@ -152,4 +143,4 @@ def enter_chatroom():
         else:
             flash("正しいルーム名とパスワードを入力してください")
             return redirect(url_for('authenication.enter_chatroom'))
-    return render_template("index.html", form =form)
+    return render_template("index.html", form=form)
