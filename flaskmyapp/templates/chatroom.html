@@ -1,30 +1,188 @@
 <!DOCTYPE html>
 <html lang="ja">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Easy Tunnel Chat!</title>
+        <head>
+                <meta charset="UTF-8" />
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+                <!-- BootstrapのJS読み込み -->
+                <script src="js/bootstrap.min.js"></script>
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <title>Satori-Chat</title>
+                <style>
+                        body{
+                        font-family: sans-serif;
+                        color:black;
+                        margin: 20px;
+                        padding: 50px;
+                        background-color: white;
+                        }
+                        @media screen and (max-width: 768px) {
+                                font-family: sans-serif;
+                                color:black;
+                                margin: 10px;
+                                padding: 30px;
+                                background-color: white;
+                                }
+
+                        h1 {
+                                font-size: 24px;
+                                font-weight: bold;
+
+                        }
+                        h2 {
+                                font-size: 24px;
+                                text-align: center;
+                                padding-top: 24px;
+                                padding-bottom: 36px;
+                                font-weight: bold;
+                        }
+                        .info {
+                                list-style-type: none;
+                                text-align: center;
+                        }
+                        .title {
+                                text-align: center;
+                                padding: 50px 40px;
+                                margin: 30px 30px;
+
+                        }
+                        .loginform {
+                                margin: 0 4 0 4em;
+                                font-size: 0.75em;
+                                text-align: center;
+                                padding: 14px 14px 14px 14px;
+                        }
+                        .postform {
+                                margin: 0em 4em 0em 4em;
+                                font-size: 0.75em;
+                                padding: 14px 14px 14px 14px;
+                        }
+                        .chats {
+                                padding-left: 6em;
+                                padding-bottom: 1em;
+                                margin: 0em 0em 2em 0em;
+                                border-bottom: 1px solid #ddddddd4;
+                        }
+                                @media screen and (max-width: 768px) {
+                                        .chat_space {
+                                        height: 200px;
+                                        }
+                                        .chatform {
+                                        margin-top: 18px;
+                                        margin-left: 0;
+                                        }
+                                        .label {
+                                        font-size: 15px;
+                                        }
+                                        .chats {
+                                        padding: 0em 2em 1em 2em;
+                                        min-width: 15em;
+                                        max-height: 50em;
+                                        overflow-wrap: break-word;
+                                        }
+                                }
+                        .chatroomname {
+                                min-width: 40em;
+                                height: 10.0em;
+                                word-wrap: break-word;
+
+                        }
+                        .password {
+                                min-width: 40em;
+                                height: 10.0em;
+                                word-wrap: break-word;
+                        }
+                        .email {
+                                min-width: 40em;
+                                height: 10.0em;
+                                word-wrap: break-word;
+                        }
+                        .username {
+                                min-width: 40em;
+                                height: 10.0em;
+                                word-wrap: break-word;
+                        }
+                        .chat_text {
+
+                        }
+                        .chat_space {
+
+                        }
+                        .chatform {
+                                padding: 0em 0em 4em 8em;
+                                font-size: 0.75em;
+                        }
+                        .chatroom_link {
+                                border-top: 1px solid #ddddddd4;
+                                border-bottom: 1px solid #ddddddd4;
+                        }
+                        .links {
+                                border-bottom: 1px solid #ddddddd4;
+                        }
+                        .link {
+                                padding: 12px 12px 12px 12px;
+                        }
+                        .container {
+                                padding: 18px 18px 18px 18px;
+                        }
+                        .menulink_btn {
+                                btn btn-info
+                                width: 200px;
+                        }
+                        .chatroom {
+                                margin: 10px;
+                                padding: 10px;
+                                background-color: #f7f7f7;
+                        }
+                        .chat {
+                                border: 1px solid #ddd;
+                                border-radius: 6px;
+                                padding-left: 1em;
+                                padding-right: 1em;
+                                min-height: 216px;
+                                flex: 1;
+                                width: 100%;
+                                max-width: 410px;
+                                font-size: 1em;
+                        }
+
+                                @media screen and (max-width: 768px) {
+									.chat {
+                                        margin-top: 18px;
+                                        margin-left: 0;
+                                        min-height: 200px;
+                                        flex: inherit;
+                                        font-size: 15px;
+                                }
+                        }
+                        .label {
+                                font-size: 17px;
+                                color: black;
+                        }
+                </style>
     </head>
     <body>
         <h2>{{ chat_room_name }}</h2>
-		<div class="chat_space">
-        	<div class="chat_text">
-			{% if contents %}
-        		{% for content in contents|default([]) %}
-        			<p class="chat">{{ content[0] }}:{{ content[1] }}</div>
-        		{% endfor %}
-			{% endif %}
-			</div>
-		</div>
-		<form method="POST">
-			{{ form.csrf_token }}
-			{{ form.chat.label }} {{ form.chat(size=20) }}
-			{% if form.chat.errors %}
-			{% for error in form.chat.errors%}
-			<span style="color: black;">{{ error }}</span>
-			{% endfor %}
-			{% endif %}
-			<input type="submit" value="送信">
-		</form>
+                <div class="chatroom">
+                        {% if contents %}
+                        {% for content in contents|default([]) %}
+                                <p class="chats">{{ content[0] }}:{{ content[1] }}
+                        {% endfor %}
+                        {% endif %}
+                </div>
+                        <div class="chatform">
+                                <form method="POST">
+                                        {{ form.csrf_token }}
+                                        {{ form.chat.label(class_="label") }}<br>{{ form.chat(class_="chat") }}
+                                        {% if form.chat.errors %}
+                                        {% for error in form.chat.errors%}
+                                        <span style="color: black;">{{ error }}</span>
+                                        {% endfor %}
+                                        {% endif %}
+                                        <p>{{ form.submit() }}</p>
+                                </form>
+                        </div>
+                </div>
     </body>
 </html>
