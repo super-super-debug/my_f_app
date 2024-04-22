@@ -1,4 +1,11 @@
 /venv/*
 /__pycache__/*
 .github/workflows/*
+/my_f_app/*
+/static/*
+test.py
+testapp.py
+/static/*
+/flaskmyapp/static/*
+/flaskmyapp/_pycache_/*
 /README.md
