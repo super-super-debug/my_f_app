@@ -1,12 +1,13 @@
-from flask import Flask, render_template, request, url_for, redirect, Blueprint, flash, session
+from flask import Flask, render_template, request, url_for, redirect, Blueprint, flash, session, send_from_directory
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFProtect
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Length 
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired, Length
 from argon2 import PasswordHasher
 import pymysql
 from logging import getLogger
 from . import app
+import os
 
 logger = getLogger(__name__)
 def log():
@@ -17,14 +18,15 @@ def log():
 def getconnection():
     return pymysql.connect(host = "localhost", port = int(3306), db = "My_chatrooms", user = "root", password = "Ichimura$2002",charset = "utf8mb4")
 
-bp = Blueprint('my_web_app', __name__)   
+bp = Blueprint('my_web_app', __name__)
 
 
 csrf = CSRFProtect
 ph = PasswordHasher(time_cost=3, memory_cost=65536, parallelism=4, hash_len=32, salt_len=16)
 
 class ChatForm(FlaskForm):
-    chat = StringField("chat", validators=[DataRequired("テキストを入力してください")])
+    chat = TextAreaField("chat", validators=[DataRequired("テキストを入力してください")])
+    submit = SubmitField("送信")
 
 class CreateForm(FlaskForm):
     chatroomname = StringField("チャットルーム名",validators=[DataRequired("ルーム名を入力してください"),Length(1, 16, "16文字以内で入力してください")])
@@ -39,7 +41,7 @@ def create_chatroom():
     form = CreateForm()
     new_table_name = ""
     new_table_url = "None"
-    
+
     if form.validate_on_submit():
         connection = getconnection()
         cursor = connection.cursor()
@@ -54,7 +56,7 @@ def create_chatroom():
         if existing_name is not None:
             flash("すでにチャットルーム名が登録されています")
             return redirect(url_for("my_web_app.create_chatroom"))
-#現在のテーブル数を取得  
+#現在のテーブル数を取得
         show_query = ("SHOW TABLES;")
         try:
             cursor.execute(show_query)
@@ -62,7 +64,7 @@ def create_chatroom():
             print(f"ShowQueryError: {e}")
         current_tables = cursor.fetchall()
         current_table_count = len(current_tables)
-        print(current_table_count)        
+        print(current_table_count)
 
 #テーブル名を生成
         new_table_name = f'table_{current_table_count + 1}'
@@ -84,7 +86,7 @@ def create_chatroom():
         try:
             cursor.execute(convert_query)
         except Exception as e:
-            print(f"OperationalError2: {e}") 
+            print(f"OperationalError2: {e}")
         connection.commit()
         cursor.close()
         connection.close()
@@ -93,7 +95,7 @@ def create_chatroom():
         print(session.get("entered_chatroom"))
         return redirect(url_for('my_web_app.chatroom', new_table_url=new_table_url, form=form))
     else:
-        return render_template("createchatroom.html", form=form) 
+        return render_template("createchatroom.html", form=form)
 
 @bp.route("/chatroom/<new_table_url>", methods=["POST", "GET"])
 
@@ -109,48 +111,39 @@ def chatroom(new_table_url):
     if session.get("entered_chatroom") is not None and session.get("entered_chatroom") == new_table_url:
         if new_table_url:
             try:
+                #チャットを取得するクエリを実行
                 table_name_query = "SELECT chat_room_name FROM chatrooms WHERE chat_room_id = %s;"
                 cursor.execute(table_name_query, (new_table_url,))
                 chat_room_name = cursor.fetchone()
-
-        #if chat_room_name is None:
-            # chat_room_idが見つからない場合の処理
-        #    return render_template("chatroom_not_found.html")
-
                 toridasu_chats_query = f"SELECT user_name, chat FROM table_{new_table_url} LIMIT 35;"
                 cursor.execute(toridasu_chats_query)
                 contents = cursor.fetchall()
-                print(contents)
+                #チャットを表示する
                 for content in contents:
                     print(content)
+                #チャットをする＆セッション情報を確認してログインユーザー名を取得
                 if form.validate_on_submit():
                     kariname = session.get("user_name")
                     if kariname is not None:
                         name = kariname
                     else:
                         name = "Anonimus"
-                print(name)
                 post = form.chat.data
                 add_chat = f"INSERT INTO table_{new_table_url}(chat,user_name) VALUES ('{post}','{name}');"
-                cursor.execute(add_chat)
-                connection.commit()
-
+                try:
+                    cursor.execute(add_chat)
+                    connection.commit()
+                    return redirect(url_for("my_web_app.chatroom", new_table_url=new_table_url, form=form))
+                except Exception as e:
+                    print(f"insertError: {e}")
             except pymysql.Error as e:
                 print(f"オペレーショナルエラーです!!: {e}")
 
             finally:
-                try:
-                    connection.commit()
-                except pymysql.Error as e:
-                    print(f"Commit Error: {e}")
                 cursor.close()
                 connection.close()
-
                 return render_template("chatroom.html", chat_room_name=chat_room_name, contents=contents, post=post, form=form)
         else:
             return render_template("chatroom.html", chat_room_name=chat_room_name, form=form)
-        print("cookie_error")
     else:
         return redirect(url_for("authenication.enter_chatroom"))
-
-# 3./で情報を登録してもリダイレクト、バリデーションされず、その状態で新規登録のページに飛ぶと、チャット名が登録済みのやつと正しいパスを入力しろがバリデーションされる。
