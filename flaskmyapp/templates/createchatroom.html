@@ -1,32 +1,148 @@
 <!DOCTYPE html>
 <html lang="ja">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Easy Tunnel Chat!</title>
-	</head>
-	<body>
-		
-		<h2>チャットルームの作成</h2>
-		<form method="POST" novalidate="novalidate">
-                        {{ form.hidden_tag() }}
-                        {{ form.chatroomname.label }} {{ form.chatroomname(size=20) }}
-                        {% if form.chatroomname.errors %}
-                        <ul class="errors">
-                        {% for error in form.chatroomname.errors %}
-                                <li>{{ error }}</li>
-                                <span style="color: black;">{% endfor %}</span>
-                        </ul>
-                        {% endif %}
-                        {{ form.password.label}} {{ form.password(size=20) }}
-                        {% if form.password.errors %}
-                        <ul class="errors">
-                        {% for error in form.password.errors %}
-                                <li>{{ error }}</li>
-                                <span style="color: black;">{% endfor %}</span>
-                        </ul>
-                        {% endif %}
-                        <input type="submit" value="送信">
-      		</form>
-	</body>
+        <head>
+                <meta charset="UTF-8" />
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+                <!-- BootstrapのJS読み込み -->
+                <script src="js/bootstrap.min.js"></script>
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <title>Satori-Chat</title>
+                <style>
+                        body{
+                                font-family: sans-serif;
+                                color:black;
+                                margin: 20px;
+                                padding: 50px;
+                                background-color: white;
+                        }
+                        @media screen and (max-width: 768px) {
+                                font-family: sans-serif;
+                                color:black;
+                                margin: 10px;
+                                padding: 30px;
+                                background-color: white;
+                                }
+
+                        h1 {
+                        font-size: 24px;
+                                text-align: center;
+
+                        }
+                        h2 {
+                                font-size: 24px;
+                                text-align: center;
+                                padding-top: 24px;
+                                padding-bottom: 36px;
+                        }
+                        .info {
+                        list-style-type: none;
+                                text-align: center;
+                        }
+                        .title {
+                        text-align: center;
+                                padding: 50px 40px;
+                                margin: 30px 30px;
+
+                        }
+                        .loginform {
+                                margin: 0 4 0 4em;
+                                font-size: 0.75em;
+                                text-align: center;
+                                padding: 14px 14px 14px 14px;
+                        }
+                        .postform {
+                                margin: 0 4 0 4em;
+                                font-size: 0.75em;
+                                text-align: center;
+                                padding: 14px 14px 14px 14px;
+                        }
+                        .chat {
+                                min-width: 40em;
+                                height: 10.0em;
+                                word-wrap: break-word;
+                        }
+                        .chatroomname {
+                                min-width: 40em;
+                                height: 10.0em;
+                                word-wrap: break-word;
+
+                        }
+                        .password {
+                                min-width: 40em;
+                                height: 10.0em;
+                                word-wrap: break-word;
+                        }
+                        .email {
+                                min-width: 40em;
+                                height: 10.0em;
+                                word-wrap: break-word;
+                        }
+                        .username {
+                                min-width: 40em;
+                                height: 10.0em;
+                                word-wrap: break-word;
+                        }
+                        .chat_text {
+
+                        }
+                        .chat_space {
+
+                        }
+                        .chatform {
+                                padding: 3 0 0 0em;
+                        }
+                        .chatroom_link {
+                                border-top: 1px solid #ddddddd4;
+                                border-bottom: 1px solid #ddddddd4;
+                        }
+                        .links {
+							border-bottom: 1px solid #ddddddd4;
+                        }
+                        .link {
+                                padding: 12px 12px 12px 12px;
+                        }
+                        .container {
+                                padding: 18px 18px 18px 18px;
+                        }
+                        .menulink_btn {
+                                btn btn-info
+                                width: 200px;
+                        }
+                        .create_chatroom_form {
+                                padding: 30px;
+                                margin: 10px;
+                                background-color: #f7f7f7;
+
+                        }
+                </style>
+        </head>
+        <body>
+                <h2>チャットルームの作成</h2>
+                <div class="create_chatroom_form">
+                        <form method="POST" novalidate="novalidate">
+                                {{ form.hidden_tag() }}
+                                {{ form.chatroomname.label }} {{ form.chatroomname(size=20) }}
+                                {% if form.chatroomname.errors %}
+                                <ul class="errors">
+                                {% for error in form.chatroomname.errors %}
+                                        <li>{{ error }}</li>
+                                        <span style="color: black;">{% endfor %}</span>
+                                </ul>
+                                {% endif %}
+                                <br>
+                                {{ form.password.label}} {{ form.password(size=20) }}
+                                {% if form.password.errors %}
+                                <ul class="errors">
+                                {% for error in form.password.errors %}
+                                        <li>{{ error }}</li>
+                                        <span style="color: black;">{% endfor %}</span>
+                                </ul>
+                                {% endif %}
+                                <p>{{ form.submit() }}</p>
+                        </form>
+                </div>
+        </body>
 </html>
+
