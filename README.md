@@ -1,7 +1,7 @@
 # github
 タイトルFlaskを使用してチャットアプリを作成して、Webアプリについて学習をしました！
 ## 1.アプリの概要
-サーバーサイドにPython、フレームワークのFlask、インフラにAWS、サーバーOSにApache2、WSGIにuWSGIを使用し、GithubとCodeDeployを使用して半自動でデプロイ可能な環境を構築しました。
+サーバーサイドにPython、フレームワークのFlask、インフラにAWS、サーバーソフトウェアにApache2、WSGIにuWSGIを使用し、GithubとCodeDeployを使用して半自動でデプロイ可能な環境を構築しました。
 url(https://satorichat.com #AWSの費用が高額になってしまったので5月7日をもってアプリの公開を停止しました…)
 ## 2.アプリの機能
  - チャット機能(CRUD)
@@ -11,7 +11,7 @@ url(https://satorichat.com #AWSの費用が高額になってしまったので5
  - ゲスト機能（認証をせずともゲストルームでAnonymusとしてチャットが可能）
 ### 
 ## 使用技術
-### OS
+### サーバーソフトウェア
   - DB:MySQL
   - Apache2
 ### フロントエンド
