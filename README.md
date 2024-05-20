@@ -14,6 +14,7 @@ url(https://satorichat.com #AWSの費用が高額になってしまったので5
 ![caputure1](script/caputure1.png)
 ### チャット画面
 ![caputure2](script/caputure2.png)
+＊初めてアプリのチャット機能をテストした際のもので少々興奮していました
 ## 使用技術
 ### サーバーソフトウェア
   - DB:MySQL
