@@ -9,11 +9,11 @@ url(https://satorichat.com #AWSの費用が高額になってしまったので5
  - 認証機能
  - セッション管理機能
  - ゲスト機能（認証をせずともゲストルームでAnonymusとしてチャットが可能）
-### アプリの画面
+## アプリの画面
+### トップ画面
 ![caputure1](script/caputure1.png)
-
+### チャット画面
 ![caputure2](script/caputure2.png)
-
 ## 使用技術
 ### サーバーソフトウェア
   - DB:MySQL
